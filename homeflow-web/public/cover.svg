@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1640"
+     height="624"
+     viewBox="0 0 1640 624">
+
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+
+    <radialGradient id="blob1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="blob2">
+      <stop offset="0%" stop-color="#A5F3FC" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#A5F3FC" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+
+    <pattern id="dots" width="36" height="36" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.2" fill="white" opacity="0.12"/>
+    </pattern>
+  </defs>
+
+  <rect width="1640" height="624" fill="url(#bg)"/>
+  <rect width="1640" height="624" fill="url(#dots)"/>
+
+  <circle cx="220" cy="120" r="220" fill="url(#blob1)" filter="url(#blur)"/>
+  <circle cx="1450" cy="520" r="260" fill="url(#blob2)" filter="url(#blur)"/>
+  <circle cx="900" cy="40" r="180" fill="url(#blob1)" filter="url(#blur)"/>
+
+  <path d="M0,460 C220,380 340,520 520,450 S860,330 1040,410 S1380,560 1640,430 L1640,624 L0,624 Z"
+        fill="white" opacity="0.08"/>
+  <path d="M0,520 C260,430 430,580 700,490 S1180,380 1640,520 L1640,624 L0,624 Z"
+        fill="white" opacity="0.05"/>
+
+  <g fill="white" opacity="0.14">
+    <circle cx="180" cy="480" r="8"/>
+    <circle cx="360" cy="150" r="6"/>
+    <circle cx="600" cy="320" r="10"/>
+    <circle cx="880" cy="220" r="7"/>
+    <circle cx="1160" cy="470" r="9"/>
+    <circle cx="1420" cy="180" r="6"/>
+    <circle cx="1540" cy="340" r="11"/>
+  </g>
+
+  <g fill="none" stroke="white" opacity="0.15">
+    <circle cx="1320" cy="170" r="120" stroke-width="2"/>
+    <circle cx="1380" cy="230" r="60" stroke-width="2"/>
+    <circle cx="280" cy="260" r="90" stroke-width="2"/>
+  </g>
+</svg>
