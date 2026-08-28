@@ -13,14 +13,18 @@ async function bootstrap() {
     })
   );
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Homeflow API')
-    .setDescription('API documentation for the Homeflow backend')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, swaggerDocument);
+  // Swagger เปิด API spec ทั้งระบบให้คนนอกอ่านได้ จึงเปิดเฉพาะตอน dev
+  // Railway ต้องตั้ง NODE_ENV=production เพื่อให้เงื่อนไขนี้ทำงาน
+  if (process.env.NODE_ENV !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Homeflow API')
+      .setDescription('API documentation for the Homeflow backend')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api', app, swaggerDocument);
+  }
 
   await app.listen(process.env.PORT ?? 3000);
 }

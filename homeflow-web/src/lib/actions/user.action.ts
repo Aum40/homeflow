@@ -111,10 +111,10 @@ export async function changePasswordAction(
 }
 
 export async function uploadAvatar(
-  file: File
+  imageUrl: string
 ): Promise<ErrorActionResult | void> {
   try {
-    const avatarUrl = await UserApi.uploadAvatar(file);
+    const avatarUrl = await UserApi.uploadAvatar(imageUrl);
     await unstable_update({ user: { avatarUrl } });
   } catch (error) {
     if (error instanceof ApiError) {

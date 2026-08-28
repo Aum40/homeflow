@@ -22,6 +22,7 @@ import {
 } from '@/lib/schemas/project.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { checkUploadSize } from '@/lib/utils';
+import { uploadImageToCloudinary } from '@/lib/upload/cloudinary-upload';
 import { Camera, Pencil } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRef, useState, useTransition } from 'react';
@@ -79,10 +80,17 @@ export default function EditProjectInfoDialog({
       }
 
       if (imageFile) {
-        const uploadResult = await uploadProjectImageAction(
-          projectId,
-          imageFile
+        let imageUrl: string;
+        try {
+          imageUrl = await uploadImageToCloudinary(imageFile);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : 'อัปโหลดรูปไม่สำเร็จ'
         );
+        return;
+      }
+
+        const uploadResult = await uploadProjectImageAction(projectId, imageUrl);
         if (uploadResult?.success === false) {
           setErrorMessage(uploadResult.message);
           return;

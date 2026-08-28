@@ -107,16 +107,16 @@ export class HouseDesignService {
 
   async uploadImage(
     id: string,
-    file: Express.Multer.File
+    imageUrl: string
   ): Promise<HouseDesignResponseDto> {
+    this.cloudinaryService.assertOwnedUrl(imageUrl);
+
     const existing = await this.prisma.houseDesign.findUnique({
       where: { id }
     });
     if (!existing) {
       throw new NotFoundException('House design not found');
     }
-
-    const imageUrl = await this.cloudinaryService.upload(file);
 
     const houseDesign = await this.prisma.houseDesign.update({
       where: { id },

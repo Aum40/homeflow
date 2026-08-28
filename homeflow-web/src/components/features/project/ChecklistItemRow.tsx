@@ -10,6 +10,7 @@ import {
 import { ChecklistItemResponse } from '@/lib/api/api.type';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import { checkUploadSize, cn } from '@/lib/utils';
+import { uploadImagesToCloudinary } from '@/lib/upload/cloudinary-upload';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ImagePlus, Loader2, Trash2, X } from 'lucide-react';
@@ -75,10 +76,20 @@ export default function ChecklistItemRow({
 
     setError(null);
     startTransition(async () => {
+      let imageUrls: string[];
+      try {
+        imageUrls = await uploadImagesToCloudinary(files);
+      } catch (error) {
+        setError(
+          error instanceof Error ? error.message : 'อัปโหลดรูปไม่สำเร็จ'
+        );
+        return;
+      }
+
       const result = await uploadChecklistItemPhotosAction(
         projectId,
         item.id,
-        files
+        imageUrls
       );
       if (result?.success === false) setError(result.message);
     });

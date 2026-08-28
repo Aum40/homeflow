@@ -209,12 +209,12 @@ export class ProjectService {
   async uploadImage(
     projectManagerId: string,
     projectId: string,
-    file: Express.Multer.File
+    imageUrl: string
   ): Promise<ProjectResponseDto> {
+    this.cloudinaryService.assertOwnedUrl(imageUrl);
+
     const project = await this.findProjectOr404(projectId);
     this.assertIsManager(project, projectManagerId);
-
-    const imageUrl = await this.cloudinaryService.upload(file);
 
     const updated = await this.prisma.project.update({
       where: { id: projectId },
@@ -514,15 +514,13 @@ export class ProjectService {
     projectManagerId: string,
     projectId: string,
     itemId: string,
-    files: Express.Multer.File[]
+    imageUrls: string[]
   ): Promise<ChecklistItemResponseDto> {
+    imageUrls.forEach((url) => this.cloudinaryService.assertOwnedUrl(url));
+
     const project = await this.findProjectOr404(projectId);
     this.assertIsManager(project, projectManagerId);
     await this.findChecklistItemOr404(projectId, itemId);
-
-    const imageUrls = await Promise.all(
-      files.map((file) => this.cloudinaryService.upload(file))
-    );
 
     await this.prisma.projectChecklistItemPhoto.createMany({
       data: imageUrls.map((imageUrl) => ({

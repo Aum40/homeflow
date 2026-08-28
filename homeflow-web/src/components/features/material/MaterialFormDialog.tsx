@@ -23,6 +23,7 @@ import {
 } from '@/lib/schemas/material.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { checkUploadSize } from '@/lib/utils';
+import { uploadImageToCloudinary } from '@/lib/upload/cloudinary-upload';
 import { Camera, Pencil, Plus } from 'lucide-react';
 import { useRef, useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -70,10 +71,17 @@ export default function MaterialFormDialog({
       const materialId = isEdit ? material.id : (result as MaterialResponse).id;
 
       if (imageFile) {
-        const uploadResult = await uploadMaterialImageAction(
-          materialId,
-          imageFile
+        let imageUrl: string;
+        try {
+          imageUrl = await uploadImageToCloudinary(imageFile);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : 'อัปโหลดรูปไม่สำเร็จ'
         );
+        return;
+      }
+
+        const uploadResult = await uploadMaterialImageAction(materialId, imageUrl);
         if (uploadResult?.success === false) {
           setErrorMessage(uploadResult.message);
           return;

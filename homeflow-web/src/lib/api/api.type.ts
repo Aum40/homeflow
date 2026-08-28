@@ -153,3 +153,11 @@ export type DashboardResponse =
       totalEstimatedBudget: string;
       totalActualCost: string;
     };
+
+export type UploadSignatureResponse = {
+  cloudName: string;
+  apiKey: string;
+  timestamp: number;
+  folder: string;
+  signature: string;
+};

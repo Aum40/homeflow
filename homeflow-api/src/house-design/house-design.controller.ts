@@ -6,17 +6,15 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
-  UploadedFile,
-  UseInterceptors
+  Post
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { HouseDesignService } from './house-design.service';
 import { CreateHouseDesignDto } from './dto/create-house-design.dto';
 import { UpdateHouseDesignDto } from './dto/update-house-design.dto';
 import { HouseDesignResponseDto } from './dto/house-design-response.dto';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
+import { ImageUrlDto } from '@/common/dto/image-url.dto';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/database/generated/prisma/enums';
 
@@ -58,13 +56,12 @@ export class HouseDesignController {
   }
 
   @Roles(UserRole.ADMIN)
-  @UseInterceptors(FileInterceptor('image'))
   @Patch(':id/image')
   async uploadImage(
     @Param('id', ParseUUIDPipe) id: string,
-    @UploadedFile() file: Express.Multer.File
+    @Body() dto: ImageUrlDto
   ): Promise<HouseDesignResponseDto> {
-    return this.houseDesignService.uploadImage(id, file);
+    return this.houseDesignService.uploadImage(id, dto.imageUrl);
   }
 
   @Roles(UserRole.ADMIN)

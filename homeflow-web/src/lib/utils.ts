@@ -18,8 +18,8 @@ export function toDownloadUrl(imageUrl: string) {
 }
 
 /**
- * ต้องไม่เกิน experimental.serverActions.bodySizeLimit ใน next.config.ts
- * เพราะรูปถูกส่งผ่าน Server Action ถ้าเกินจะล้มเหลวก่อนถึง backend
+ * เพดานขนาดต่อไฟล์ของ Cloudinary (บัญชี free)
+ * ไม่ผูกกับ Server Action แล้ว เพราะเบราว์เซอร์อัปเข้า Cloudinary โดยตรง
  */
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
@@ -29,14 +29,15 @@ export function formatFileSize(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/** คืนข้อความ error ถ้าไฟล์ใหญ่เกินกำหนด, คืน null ถ้าผ่าน */
+/**
+ * คืนข้อความ error ถ้ามีไฟล์ใดไฟล์หนึ่งใหญ่เกินกำหนด, คืน null ถ้าผ่าน
+ * เช็ครายไฟล์ไม่ใช่ผลรวม เพราะแต่ละไฟล์ถูกอัปแยก request กัน
+ */
 export function checkUploadSize(files: File | File[]): string | null {
   const list = Array.isArray(files) ? files : [files];
-  const total = list.reduce((sum, file) => sum + file.size, 0);
-  if (total <= MAX_UPLOAD_BYTES) return null;
+  const oversized = list.find((file) => file.size > MAX_UPLOAD_BYTES);
+  if (!oversized) return null;
 
   const limit = formatFileSize(MAX_UPLOAD_BYTES);
-  return list.length > 1
-    ? `ไฟล์รวมกัน ${formatFileSize(total)} ใหญ่เกิน ${limit} — กรุณาเลือกจำนวนน้อยลงหรือย่อขนาดรูปก่อน`
-    : `ไฟล์ขนาด ${formatFileSize(total)} ใหญ่เกิน ${limit} — กรุณาย่อขนาดรูปก่อนอัปโหลด`;
+  return `ไฟล์ขนาด ${formatFileSize(oversized.size)} ใหญ่เกิน ${limit} — กรุณาย่อขนาดรูปก่อนอัปโหลด`;
 }

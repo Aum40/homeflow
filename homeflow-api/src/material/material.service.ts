@@ -77,14 +77,14 @@ export class MaterialService {
 
   async uploadImage(
     id: string,
-    file: Express.Multer.File
+    imageUrl: string
   ): Promise<MaterialResponseDto> {
+    this.cloudinaryService.assertOwnedUrl(imageUrl);
+
     const existing = await this.prisma.material.findUnique({ where: { id } });
     if (!existing) {
       throw new NotFoundException('Material not found');
     }
-
-    const imageUrl = await this.cloudinaryService.upload(file);
 
     const material = await this.prisma.material.update({
       where: { id },

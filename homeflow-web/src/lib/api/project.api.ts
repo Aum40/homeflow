@@ -54,12 +54,10 @@ export const ProjectApi = {
     });
   },
 
-  async uploadImage(projectId: string, file: File) {
-    const formData = new FormData();
-    formData.append('image', file);
+  async uploadImage(projectId: string, imageUrl: string) {
     return authFetch<ProjectResponse>(`/projects/${projectId}/image`, {
       method: 'PATCH',
-      body: formData
+      body: { imageUrl }
     });
   },
 
@@ -157,13 +155,11 @@ export const ProjectApi = {
   async uploadChecklistItemPhotos(
     projectId: string,
     itemId: string,
-    files: File[]
+    imageUrls: string[]
   ) {
-    const formData = new FormData();
-    files.forEach((file) => formData.append('photos', file));
     return authFetch<ChecklistItemResponse>(
       `/projects/${projectId}/checklist/${itemId}/photos`,
-      { method: 'POST', body: formData }
+      { method: 'POST', body: { imageUrls } }
     );
   },
 

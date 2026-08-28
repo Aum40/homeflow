@@ -5,11 +5,8 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
-  Patch,
-  UploadedFile,
-  UseInterceptors
+  Patch
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -19,6 +16,7 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
+import { ImageUrlDto } from '@/common/dto/image-url.dto';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/database/generated/prisma/enums';
 
@@ -45,13 +43,12 @@ export class UserController {
     return { message: 'Password changed successfully' };
   }
 
-  @UseInterceptors(FileInterceptor('avatar'))
   @Patch('me/avatar')
   async uploadAvatar(
-    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: ImageUrlDto,
     @CurrentUser('sub') userId: string
   ): Promise<string> {
-    return this.userService.uploadAvatar(userId, file);
+    return this.userService.uploadAvatar(userId, dto.imageUrl);
   }
 
   @Roles(UserRole.ADMIN)

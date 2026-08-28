@@ -74,10 +74,10 @@ export async function updateHouseDesignAction(
 
 export async function uploadHouseDesignImageAction(
   houseDesignId: string,
-  file: File
+  imageUrl: string
 ): Promise<ErrorActionResult | void> {
   try {
-    await HouseDesignApi.uploadImage(houseDesignId, file);
+    await HouseDesignApi.uploadImage(houseDesignId, imageUrl);
   } catch (error) {
     if (error instanceof ApiError) {
       return {

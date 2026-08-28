@@ -28,12 +28,10 @@ export const UserApi = {
     });
   },
 
-  async uploadAvatar(file: File) {
-    const formData = new FormData();
-    formData.append('avatar', file);
+  async uploadAvatar(imageUrl: string) {
     return authFetch<string>('/users/me/avatar', {
       method: 'PATCH',
-      body: formData
+      body: { imageUrl }
     });
   },
 

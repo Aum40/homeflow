@@ -6,12 +6,8 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
-  UploadedFile,
-  UploadedFiles,
-  UseInterceptors
+  Post
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -29,6 +25,7 @@ import { BudgetResponseDto } from './dto/budget-response.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
+import { ImageUrlDto, ImageUrlsDto } from '@/common/dto/image-url.dto';
 import { UserRole } from '@/database/generated/prisma/enums';
 
 @ApiBearerAuth()
@@ -89,14 +86,13 @@ export class ProjectController {
   }
 
   @Roles(UserRole.PROJECT_MANAGER)
-  @UseInterceptors(FileInterceptor('image'))
   @Patch(':id/image')
   async uploadImage(
     @CurrentUser('sub') projectManagerId: string,
     @Param('id', ParseUUIDPipe) id: string,
-    @UploadedFile() file: Express.Multer.File
+    @Body() dto: ImageUrlDto
   ): Promise<ProjectResponseDto> {
-    return this.projectService.uploadImage(projectManagerId, id, file);
+    return this.projectService.uploadImage(projectManagerId, id, dto.imageUrl);
   }
 
   @Roles(UserRole.PROJECT_MANAGER)
@@ -225,19 +221,18 @@ export class ProjectController {
   }
 
   @Roles(UserRole.PROJECT_MANAGER)
-  @UseInterceptors(FilesInterceptor('photos'))
   @Post(':id/checklist/:itemId/photos')
   async addChecklistItemPhotos(
     @CurrentUser('sub') projectManagerId: string,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('itemId', ParseUUIDPipe) itemId: string,
-    @UploadedFiles() files: Express.Multer.File[]
+    @Body() dto: ImageUrlsDto
   ): Promise<ChecklistItemResponseDto> {
     return this.projectService.addChecklistItemPhotos(
       projectManagerId,
       id,
       itemId,
-      files
+      dto.imageUrls
     );
   }
 

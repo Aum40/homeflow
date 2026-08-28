@@ -34,12 +34,10 @@ export const MaterialApi = {
     });
   },
 
-  async uploadImage(materialId: string, file: File) {
-    const formData = new FormData();
-    formData.append('image', file);
+  async uploadImage(materialId: string, imageUrl: string) {
     return authFetch<MaterialResponse>(`/materials/${materialId}/image`, {
       method: 'PATCH',
-      body: formData
+      body: { imageUrl }
     });
   }
 };

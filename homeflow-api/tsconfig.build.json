@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.json",
+  // จำกัดขอบเขตไว้ที่ src/ เท่านั้น ไม่งั้น tsc จะดึงไฟล์ระดับ root
+  // (prisma.config.ts, prisma/seed.ts) เข้ามาด้วย ทำให้ rootDir ขยับ
+  // ไปเป็น root ของโปรเจกต์ แล้ว output กลายเป็น dist/src/main.js
+  // ซึ่งไม่ตรงกับ start:prod ที่ชี้ไป dist/main
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }

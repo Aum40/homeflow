@@ -22,6 +22,7 @@ import {
   createHouseDesignSchema
 } from '@/lib/schemas/house-design.schema';
 import { checkUploadSize } from '@/lib/utils';
+import { uploadImageToCloudinary } from '@/lib/upload/cloudinary-upload';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowDown, ArrowUp, Camera, Pencil, Plus, X } from 'lucide-react';
 import { useRef, useState, useTransition } from 'react';
@@ -89,10 +90,17 @@ export default function HouseDesignFormDialog({
         : (result as HouseDesignResponse).id;
 
       if (imageFile) {
-        const uploadResult = await uploadHouseDesignImageAction(
-          houseDesignId,
-          imageFile
+        let imageUrl: string;
+        try {
+          imageUrl = await uploadImageToCloudinary(imageFile);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : 'อัปโหลดรูปไม่สำเร็จ'
         );
+        return;
+      }
+
+        const uploadResult = await uploadHouseDesignImageAction(houseDesignId, imageUrl);
         if (uploadResult?.success === false) {
           setErrorMessage(uploadResult.message);
           return;

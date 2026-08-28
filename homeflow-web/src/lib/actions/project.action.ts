@@ -112,10 +112,10 @@ export async function updateProjectInfoAction(
 
 export async function uploadProjectImageAction(
   projectId: string,
-  file: File
+  imageUrl: string
 ): Promise<ErrorActionResult | void> {
   try {
-    await ProjectApi.uploadImage(projectId, file);
+    await ProjectApi.uploadImage(projectId, imageUrl);
   } catch (error) {
     if (error instanceof ApiError) {
       return {
@@ -341,10 +341,10 @@ export async function removeChecklistItemPhotoAction(
 export async function uploadChecklistItemPhotosAction(
   projectId: string,
   itemId: string,
-  files: File[]
+  imageUrls: string[]
 ): Promise<ErrorActionResult | void> {
   try {
-    await ProjectApi.uploadChecklistItemPhotos(projectId, itemId, files);
+    await ProjectApi.uploadChecklistItemPhotos(projectId, itemId, imageUrls);
   } catch (error) {
     if (error instanceof ApiError) {
       return {

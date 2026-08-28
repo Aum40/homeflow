@@ -9,6 +9,7 @@ import { MaterialModule } from './material/material.module';
 import { HouseDesignModule } from './house-design/house-design.module';
 import { CompanyContactModule } from './company-contact/company-contact.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { HealthModule } from './health/health.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
@@ -26,7 +27,8 @@ import { RolesGuard } from './auth/guards/roles.guard';
     MaterialModule,
     HouseDesignModule,
     CompanyContactModule,
-    DashboardModule
+    DashboardModule,
+    HealthModule
   ],
   providers: [
     {

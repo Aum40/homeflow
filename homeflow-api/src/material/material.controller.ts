@@ -6,17 +6,15 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
-  UploadedFile,
-  UseInterceptors
+  Post
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MaterialService } from './material.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { MaterialResponseDto } from './dto/material-response.dto';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
+import { ImageUrlDto } from '@/common/dto/image-url.dto';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/database/generated/prisma/enums';
 
@@ -56,13 +54,12 @@ export class MaterialController {
   }
 
   @Roles(UserRole.ADMIN)
-  @UseInterceptors(FileInterceptor('image'))
   @Patch(':id/image')
   async uploadImage(
     @Param('id', ParseUUIDPipe) id: string,
-    @UploadedFile() file: Express.Multer.File
+    @Body() dto: ImageUrlDto
   ): Promise<MaterialResponseDto> {
-    return this.materialService.uploadImage(id, file);
+    return this.materialService.uploadImage(id, dto.imageUrl);
   }
 
   @Roles(UserRole.ADMIN)

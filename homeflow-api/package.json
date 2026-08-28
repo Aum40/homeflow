@@ -5,8 +5,14 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
-    "build": "nest build",
+    "build": "prisma generate && nest build",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

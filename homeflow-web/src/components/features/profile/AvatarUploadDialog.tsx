@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { uploadAvatar } from '@/lib/actions/user.action';
 import { checkUploadSize } from '@/lib/utils';
+import { uploadImageToCloudinary } from '@/lib/upload/cloudinary-upload';
 import { Camera, Loader2 } from 'lucide-react';
 import { useRef, useState, useTransition } from 'react';
 
@@ -35,7 +36,17 @@ export default function AvatarUploadDialog({
     if (!file) return;
     setErrorMessage(null);
     startTransition(async () => {
-      const result = await uploadAvatar(file);
+      let imageUrl: string;
+      try {
+        imageUrl = await uploadImageToCloudinary(file);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : 'อัปโหลดรูปไม่สำเร็จ'
+        );
+        return;
+      }
+
+      const result = await uploadAvatar(imageUrl);
       if (result?.success === false) {
         setErrorMessage(result.message);
         return;

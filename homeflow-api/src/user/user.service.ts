@@ -158,11 +158,9 @@ export class UserService {
     });
   }
 
-  async uploadAvatar(
-    userId: string,
-    file: Express.Multer.File
-  ): Promise<string> {
-    const avatarUrl = await this.cloudinaryService.upload(file);
+  async uploadAvatar(userId: string, avatarUrl: string): Promise<string> {
+    this.cloudinaryService.assertOwnedUrl(avatarUrl);
+
     await this.prisma.user.update({
       data: { avatarUrl },
       where: { id: userId }

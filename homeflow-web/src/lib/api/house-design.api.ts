@@ -35,12 +35,10 @@ export const HouseDesignApi = {
     );
   },
 
-  async uploadImage(houseDesignId: string, file: File) {
-    const formData = new FormData();
-    formData.append('image', file);
+  async uploadImage(houseDesignId: string, imageUrl: string) {
     return authFetch<HouseDesignResponse>(
       `/house-designs/${houseDesignId}/image`,
-      { method: 'PATCH', body: formData }
+      { method: 'PATCH', body: { imageUrl } }
     );
   }
 };

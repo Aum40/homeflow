@@ -74,10 +74,10 @@ export async function updateMaterialAction(
 
 export async function uploadMaterialImageAction(
   materialId: string,
-  file: File
+  imageUrl: string
 ): Promise<ErrorActionResult | void> {
   try {
-    await MaterialApi.uploadImage(materialId, file);
+    await MaterialApi.uploadImage(materialId, imageUrl);
   } catch (error) {
     if (error instanceof ApiError) {
       return {
