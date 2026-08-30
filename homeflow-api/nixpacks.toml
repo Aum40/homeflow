@@ -1,7 +1,10 @@
-# Nixpacks จะใส่ pnpm 9 จาก nix มาให้เอง ซึ่งชนะใน PATH ทับตัวที่เราติดตั้ง
-# แล้วพังเพราะ pnpm 9 บังคับให้ pnpm-workspace.yaml ต้องมีฟิลด์ packages
-# (ERROR packages field missing or empty) จึงตัดออกจาก setup แล้วติดตั้ง
-# pnpm 11.5.2 ผ่าน npm เองให้ตรงกับ packageManager ใน package.json
+# pnpm ที่ Nixpacks ให้มาจาก nix เป็นเวอร์ชัน 9 ซึ่งบังคับให้ pnpm-workspace.yaml
+# ต้องมีฟิลด์ packages (ERROR packages field missing or empty) จึงตัดออกจาก setup
+# แล้วติดตั้ง 11.5.2 ผ่าน npm ให้ตรงกับ packageManager ใน package.json แทน
+#
+# npm i -g วางไบนารีไว้นอก PATH ของ shell ที่ Nixpacks ใช้ (pnpm: command not found)
+# จึง symlink เข้า /usr/local/bin เพื่อให้ทั้ง phase build และ start เรียก pnpm ได้
+#
 # openssl ต้องคงไว้ -- prisma ต้องใช้
 [phases.setup]
 nixPkgs = ["nodejs_22", "openssl"]
@@ -9,6 +12,7 @@ nixPkgs = ["nodejs_22", "openssl"]
 [phases.install]
 cmds = [
   "npm i -g pnpm@11.5.2",
+  "ln -sf \"$(npm prefix -g)/bin/pnpm\" /usr/local/bin/pnpm",
   "pnpm --version",
   "pnpm i --frozen-lockfile"
 ]
