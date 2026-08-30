@@ -1,0 +1,8 @@
+# Corepack ที่ติดมากับ Node ใน nix store เก่าเกินกว่าจะรัน pnpm 11 ได้
+# (ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING ตอน install) จึงติดตั้ง pnpm
+# ผ่าน npm ตรง ๆ ให้ตรงกับ packageManager ใน package.json แทน
+[phases.install]
+cmds = [
+  "npm i -g pnpm@11.5.2",
+  "pnpm i --frozen-lockfile"
+]
