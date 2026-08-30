@@ -6,8 +6,7 @@
     "watchPatterns": ["homeflow-api/**"]
   },
   "deploy": {
-    "preDeployCommand": "pnpm db:migrate:deploy",
-    "startCommand": "pnpm start:prod",
+    "startCommand": "pnpm db:migrate:deploy && pnpm start:prod",
     "healthcheckPath": "/health",
     "restartPolicyType": "ON_FAILURE"
   }
