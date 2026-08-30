@@ -1,8 +1,14 @@
-# Corepack ที่ติดมากับ Node ใน nix store เก่าเกินกว่าจะรัน pnpm 11 ได้
-# (ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING ตอน install) จึงติดตั้ง pnpm
-# ผ่าน npm ตรง ๆ ให้ตรงกับ packageManager ใน package.json แทน
+# Nixpacks จะใส่ pnpm 9 จาก nix มาให้เอง ซึ่งชนะใน PATH ทับตัวที่เราติดตั้ง
+# แล้วพังเพราะ pnpm 9 บังคับให้ pnpm-workspace.yaml ต้องมีฟิลด์ packages
+# (ERROR packages field missing or empty) จึงตัดออกจาก setup แล้วติดตั้ง
+# pnpm 11.5.2 ผ่าน npm เองให้ตรงกับ packageManager ใน package.json
+# openssl ต้องคงไว้ -- prisma ต้องใช้
+[phases.setup]
+nixPkgs = ["nodejs_22", "openssl"]
+
 [phases.install]
 cmds = [
   "npm i -g pnpm@11.5.2",
+  "pnpm --version",
   "pnpm i --frozen-lockfile"
 ]
